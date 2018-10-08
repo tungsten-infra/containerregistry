@@ -27,7 +27,7 @@ from six.moves import range  # pylint: disable=redefined-builtin
 class Http(httplib2.Http):
   """A threadsafe pool of httplib2.Http transports."""
 
-  def __init__(self, transport_factory, size=2):
+  def __init__(self, transport_factory, size=2, disable_ssl_certificate_validation=True):
     self._condition = threading.Condition(threading.Lock())
     self._transports = [transport_factory() for _ in range(size)]
 

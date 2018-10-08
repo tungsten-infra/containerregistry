@@ -85,7 +85,7 @@ def main():
 
   retry_factory = retry.Factory()
   retry_factory = retry_factory.WithSourceTransportCallable(httplib2.Http)
-  transport = transport_pool.Http(retry_factory.Build, size=8)
+  transport = transport_pool.Http(retry_factory.Build, size=8, disable_ssl_certificate_validation=True)
 
   if '@' in args.name:
     name = docker_name.Digest(args.name)
