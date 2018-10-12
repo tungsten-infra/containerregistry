@@ -67,6 +67,11 @@ parser.add_argument(
     help='The list of layer digest filenames in order.')
 
 parser.add_argument(
+    '--protocol',
+    action='store',
+    help='Protocol HTTP or HTTPS ')
+
+parser.add_argument(
     '--layer', action='append', help='The list of layer filenames in order.')
 
 parser.add_argument(
@@ -112,7 +117,6 @@ def main():
   if not args.name:
     logging.fatal('--name is a required arguments.')
     sys.exit(1)
-
   # This library can support push-by-digest, but the likelihood of a user
   # correctly providing us with the digest without using this library
   # directly is essentially nil.
@@ -126,11 +130,19 @@ def main():
   if not args.config and not args.tarball:
     logging.fatal('Either --config or --tarball must be specified.')
     sys.exit(1)
-
+  
+  if not args.protocol:
+    logging.fatal('--protocol is a required argument')
+    sys.exit(1)
   # If config is specified, use that.  Otherwise, fallback on reading
   # the config from the tarball.
   config = args.config
   manifest = args.manifest
+  protocol = args.protocol
+
+  if protocol !='http' and protocol !='https':
+    logging.fatal('Protocol should be http or https')
+
   if args.config:
     logging.info('Reading config from %r', args.config)
     with open(args.config, 'r') as reader:
@@ -169,7 +181,7 @@ def main():
 
     try:
       with docker_session.Push(
-          name, creds, transport, threads=_THREADS) as session:
+          protocol, name, creds, transport, threads=_THREADS) as session:
         logging.info('Starting upload ...')
         if args.oci:
           with oci_compat.OCIFromV22(v2_2_img) as oci_img:
