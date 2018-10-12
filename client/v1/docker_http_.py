@@ -90,4 +90,4 @@ def Scheme(endpoint):
   if endpoint.startswith('localhost:'):
     return 'http'
   else:
-    return 'https'
+    return 'http'
