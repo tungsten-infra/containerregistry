@@ -44,6 +44,7 @@ class Push(object):
   """Push encapsulates a Registry v2.2 Docker push session."""
 
   def __init__(self,
+	       protocol,
                name,
                creds,
                transport,
@@ -70,10 +71,10 @@ class Push(object):
                                             docker_http.PUSH)
     self._mount = mount
     self._threads = threads
-
+    self._protocol = protocol
   def _scheme_and_host(self):
     return '{scheme}://{registry}'.format(
-        scheme=docker_http.Scheme(self._name.registry),
+	scheme = self._protocol,
         registry=self._name.registry)
 
   def _base_url(self):
