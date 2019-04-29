@@ -184,11 +184,9 @@ class Transport(object):
   """
 
   def __init__(self, name,
-               protocol,
                creds,
                transport, action):
     self._name = name
-    self._protocol = protocol
     self._basic_creds = creds
     self._transport = transport
     self._action = action
@@ -222,7 +220,7 @@ class Transport(object):
     }
     resp, content = self._transport.request(
         '{scheme}://{registry}/v2/'.format(
-            scheme=self._protocol, registry=self._name.registry),
+            scheme=Scheme(self._name.registry), registry=self._name.registry),
         'GET',
         body=None,
         headers=headers)
