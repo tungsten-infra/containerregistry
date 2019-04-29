@@ -68,12 +68,12 @@ def main():
   if not args.name or not args.directory:
     logging.fatal('--name and --directory are required arguments.')
 
-if not args.protocol:
+  if not args.protocol:
     logging.fatal('--protocol is a required argument')
 
-protocol = args.protocol
+  protocol = args.protocol
 
-if protocol !='http' and protocol !='https':
+  if protocol !='http' and protocol !='https':
     logging.fatal('Protocol should be http or https')
 
   retry_factory = retry.Factory()

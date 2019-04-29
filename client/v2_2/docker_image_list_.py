@@ -237,7 +237,6 @@ class FromRegistry(DockerImageList):
     self._original_transport = transport
     self._accepted_mimes = accepted_mimes
     self._response = {}
-
   def _content(self,
                suffix,
                accepted_mimes = None,
@@ -246,7 +245,6 @@ class FromRegistry(DockerImageList):
     if isinstance(self._name, docker_name.Repository):
       suffix = '{repository}/{suffix}'.format(
           repository=self._name.repository, suffix=suffix)
-
     if suffix in self._response:
       return self._response[suffix]
 
@@ -354,7 +352,7 @@ class FromRegistry(DockerImageList):
   def __enter__(self):
     # Create a v2 transport to use for making authenticated requests.
     self._transport = docker_http.Transport(
-        self._name, self._creds, self._original_transport, docker_http.PULL)
+        self._name, self._protocol, self._creds, self._original_transport, docker_http.PULL)
 
     return self
 
