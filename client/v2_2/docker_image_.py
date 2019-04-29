@@ -333,7 +333,7 @@ class FromRegistry(DockerImage):
 
     resp, unused_content = self._transport.Request(
         '{scheme}://{registry}/v2/{suffix}'.format(
-            scheme=scheme=self._protocol,
+            scheme=self._protocol,
             registry=self._name.registry,
             suffix=suffix),
         method='HEAD',
@@ -359,7 +359,7 @@ class FromRegistry(DockerImage):
       raise ValueError('Expected docker_name.Registry for "name"')
 
     url = '{scheme}://{registry}/v2/_catalog?n={page_size}'.format(
-        scheme=scheme=self._protocol,
+        scheme=self._protocol,
         registry=self._name.registry,
         page_size=page_size)
 
