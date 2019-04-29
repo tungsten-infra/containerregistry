@@ -227,10 +227,12 @@ class FromRegistry(DockerImageList):
   def __init__(
       self,
       name,
+      protocol,
       basic_creds,
       transport,
       accepted_mimes = docker_http.MANIFEST_LIST_MIMES):
     self._name = name
+    self._protocol = protocol
     self._creds = basic_creds
     self._original_transport = transport
     self._accepted_mimes = accepted_mimes
@@ -250,7 +252,7 @@ class FromRegistry(DockerImageList):
 
     _, content = self._transport.Request(
         '{scheme}://{registry}/v2/{suffix}'.format(
-            scheme=docker_http.Scheme(self._name.registry),
+            scheme=self._protocol,
             registry=self._name.registry,
             suffix=suffix),
         accepted_codes=[six.moves.http_client.OK],
@@ -275,9 +277,9 @@ class FromRegistry(DockerImageList):
       media_type = entry['mediaType']
 
       if media_type in docker_http.MANIFEST_LIST_MIMES:
-        image = FromRegistry(name, self._creds, self._original_transport)
+        image = FromRegistry(name, self._protocol, self._creds, self._original_transport)
       elif media_type in docker_http.SUPPORTED_MANIFEST_MIMES:
-        image = v2_2_image.FromRegistry(name, self._creds,
+        image = v2_2_image.FromRegistry(name, self._creds, self._protocol,
                                         self._original_transport, [media_type])
       else:
         raise InvalidMediaTypeError('Invalid media type: ' + media_type)

@@ -50,6 +50,9 @@ parser.add_argument(
 parser.add_argument(
     '--directory', action='store', help='Where to save the image\'s files.')
 
+parser.add_argument(
+    '--protocol', action='store', help='Protcol')
+
 _THREADS = 8
 
 _PROCESSOR_ARCHITECTURE = 'amd64'
@@ -64,6 +67,14 @@ def main():
 
   if not args.name or not args.directory:
     logging.fatal('--name and --directory are required arguments.')
+
+if not args.protocol:
+    logging.fatal('--protocol is a required argument')
+
+protocol = args.protocol
+
+if protocol !='http' and protocol !='https':
+    logging.fatal('Protocol should be http or https')
 
   retry_factory = retry.Factory()
   retry_factory = retry_factory.WithSourceTransportCallable(httplib2.Http)
@@ -94,7 +105,7 @@ def main():
 
   try:
     logging.info('Pulling manifest list from %r ...', name)
-    with image_list.FromRegistry(name, creds, transport) as img_list:
+    with image_list.FromRegistry(name, protocol, creds, transport) as img_list:
       if img_list.exists():
         platform = image_list.Platform({
             'architecture': _PROCESSOR_ARCHITECTURE,
@@ -107,7 +118,7 @@ def main():
         # pytype: enable=wrong-arg-types
 
     logging.info('Pulling v2.2 image from %r ...', name)
-    with v2_2_image.FromRegistry(name, creds, transport, accept) as v2_2_img:
+    with v2_2_image.FromRegistry(name, protocol, creds, transport, accept) as v2_2_img:
       if v2_2_img.exists():
         save.fast(v2_2_img, args.directory, threads=_THREADS)
         return
